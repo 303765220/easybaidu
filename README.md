@@ -2,7 +2,7 @@
 laravel 集成百度ocr接口
 # 安装
 ````
-composer require xiaoyi/easybaidu
+composer require xiaoyi/easy-baidu
 ````
 
 # 设置配置文件
