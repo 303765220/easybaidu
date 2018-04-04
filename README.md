@@ -48,3 +48,13 @@ $image = 图片资源;
 EasyBaidu::idcard($image);
 
 ```
+2、识别银行卡
+
+```php
+
+调用示例：
+
+$image = 图片资源;
+EasyBaidu::bankcard($image);
+
+```
