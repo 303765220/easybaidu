@@ -48,7 +48,7 @@ $image = 图片资源;
 EasyBaidu::idcard($image);
 
 ```
-2、识别银行卡
+3、识别银行卡
 
 ```php
 
@@ -56,5 +56,15 @@ EasyBaidu::idcard($image);
 
 $image = 图片资源;
 EasyBaidu::bankcard($image);
+
+```
+4、GPS经纬度转换具体省市区
+
+```php
+
+调用示例：
+$lat //纬度
+$lng //经度
+EasyBaidu::locationToAddress($lat,$lng);
 
 ```

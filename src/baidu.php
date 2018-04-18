@@ -7,116 +7,61 @@
  */
 namespace Xiaoyi\EasyBaidu;
 
-use Xiaoyi\EasyBaidu\Exceptions\BaiduException;
+use Xiaoyi\EasyBaidu\Libs\location;
+use Xiaoyi\EasyBaidu\Libs\ocr;
 
-require_once 'sdk/AipOcr.php';
 class baidu
 {
 
-    private $client;
-
-    private $appid;
-    private $appkey;
-    private $secretkey;
-
-
-    public function __construct()
-    {
-        $this->checkParame();
-        $this->client = new \AipOcr($this->appid, $this->appkey, $this->secretkey);
-    }
-
-
     /**
-     *
      * 识别营业执照
      * @param $image 图片资源
      * @return mixed
-     * @throws BaiduException
+     * @throws Exceptions\BaiduException
      */
     public function license($image){
-        $result = $this->client->businessLicense($image);
-        return $this->formatResult($result);
+        $model = new ocr();
+        return $model->license($image);
     }
 
     /**
+     *
      * 识别身份证照片
      * @param $image 图片资源
      * @param string $detect_direction 是否检测图像朝向  true 和 false
      * @param string $detect_risk 是否开启身份证风险类型  true 和 false
      * @return mixed
-     * @throws BaiduException
+     * @throws Exceptions\BaiduException
      */
     public function idcard($image,$detect_direction="true",$detect_risk="false")
     {
-        $options = array();
-        $options["detect_direction"] = $detect_direction;
-        $options["detect_risk"] =  $detect_risk;
-
-        $result = $this->client->idcard($image,'front',$options);
-        return $this->formatResult($result);
+        $model = new ocr();
+        return $model->idcard($image,$detect_direction="true",$detect_risk="false");
     }
 
 
     /**
      * 识别银行卡照片
-     * @param $image  图片资源
+     * @param $image 图片资源
      * @return mixed
-     * @throws BaiduException
+     * @throws Exceptions\BaiduException
      */
     public function bankcard($image)
     {
-        $result = $this->client->bankcard($image);
-        if(array_key_exists('error_code',$result))
-        {
-            throw new BaiduException("错误码：".$result['error_code']);
-        }
-        return $result['result'];
-    }
-
-
-    /**
-     * 验证必要参数
-     */
-    private function checkParame()
-    {
-        if(is_null(config('baidu'))){
-            throw new BaiduException('请先执行php artisan vendor:publish --provider="Xiaoyi\EasyBaidu\Providers\BaiduServiceProvider"');
-        }
-
-        $this->appid = config('baidu.APP_ID');
-        if(empty($this->appid))
-        {
-            throw new BaiduException('请输入有效APP_ID');
-        }
-        $this->appkey = config('baidu.API_KEY');
-        if(empty($this->appkey))
-        {
-            throw new BaiduException('请输入有效API_KEY');
-        }
-        $this->secretkey = config('baidu.SECRET_KEY');
-        if(empty($this->secretkey))
-        {
-            throw new BaiduException('请输入有效SECRET_KEY');
-        }
+        $model = new ocr();
+        return $model->bankcard($image);
     }
 
     /**
-     * 格式化返回数据
+     * 经纬度转换省市区
+     * @param float $lat 纬度
+     * @param float $lng 经度
+     * @return array
+     * @throws Exceptions\BaiduException
      */
-    private function formatResult($result)
+    public function locationToAddress($lat=30.209435,$lng=120.195667)
     {
-        if(array_key_exists('error_code',$result))
-        {
-            throw new BaiduException("错误码：".$result['error_code']);
-        }
-
-        foreach ($result['words_result'] as $k => $v)
-        {
-            $reset[$k] = $v['words'];
-        }
-
-        return $reset;
+        $model = new location();
+        return $model->locationToAddress($lat,$lng);
     }
-
 }
